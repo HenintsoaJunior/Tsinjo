@@ -6,7 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -470,7 +473,6 @@ public class Relation {
         }
         return rowData;
     }
-
     private Object convertValue(String value, String columnType) {
         if (columnType.equals("int")) {
             try {
@@ -481,11 +483,23 @@ public class Relation {
             }
         } else if (columnType.equals("String")) {
             return value;
+        } else if (columnType.equals("date")) {
+            // Supprimer les guillemets simples autour de la date
+            value = value.replaceAll("'", "");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = dateFormat.parse(value);
+                return date;
+            } catch (ParseException e) {
+                System.out.println("La valeur doit être de type date au format 'yyyy-MM-dd'.");
+                return null;
+            }
         } else {
             System.out.println("Type de colonne non géré : " + columnType);
             return null;
         }
     }
+
 
     private void insertDataIntoTable(Table table, Map<String, Object> rowData, String tableName) {
         table.insertData(rowData);
