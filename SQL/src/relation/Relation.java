@@ -495,7 +495,7 @@ public class Relation {
     public void saveDataToFile() {
         try {
             // Créez un flux de sortie pour écrire dans le fichier
-            FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\Henintsoa\\Documents\\java\\tsinjo\\SQL\\src\\fichier\\file.txt");
+            FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\Henintsoa\\Documents\\github\\Tsinjo\\SQL\\src\\fichier\\file.txt");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
 
             // Écrivez les données de la classe DatabaseManager dans le fichier
@@ -516,7 +516,7 @@ public class Relation {
     public void loadDataFromFile() {
         try {
             // Créez un flux d'entrée pour lire à partir du fichier
-            FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Henintsoa\\Documents\\java\\tsinjo\\SQL\\src\\fichier\\file.txt");
+            FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Henintsoa\\Documents\\github\\Tsinjo\\SQL\\src\\fichier\\file.txt");
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
             // Lisez les données de la classe DatabaseManager à partir du fichier
