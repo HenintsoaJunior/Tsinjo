@@ -1,0 +1,47 @@
+package relation;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Database implements Serializable{
+	private String name;
+	private Map<String, Table> tables;
+	
+	public Database() {
+		
+	}
+	
+	public Database(String name) {
+		this.name = name;
+		tables = new HashMap<String, Table>();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Map<String, Table> getTables() {
+		return tables;
+	}
+
+	public void setTables(Map<String, Table> tables) {
+		this.tables = tables;
+	}
+	
+	public boolean CreateTable(String TableName,String column) {
+		if(!tables.containsKey(TableName)) {
+			Table table = new Table(column);
+			tables.put(name, table);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+}

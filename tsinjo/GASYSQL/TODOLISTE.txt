@@ -1,0 +1,47 @@
+Je veux te recapituler une peut ce qu'on vient de faire 
+1) Creation d'une Class Table 
+
+les fonction a creer:
+constructeur: public Table(String columnDefinitions)
+
+public void displayAllData() //pour afficher les donne
+
+private void parseColumnDefinitions(String columnDefinitions) // cette fonction consiste mettre les type de column a utiliser
+
+public List<Map<String, Object>> unionTables(Table table1, Table table2)//pour faire une Union entre deux table
+
+2)Creation d'une class Database
+
+fonction a creer :
+public boolean createTable(String tableName, String columnDefinitions) //creation d'une table
+
+public boolean tableExists(String tableName) //Verifier si la table existe
+
+public Table getTable(String tableName) // pour avoir la table
+
+public void showTables() //pour afficher les table qui existe dans la bdd
+
+3)Creation d'une class Relation
+
+fonction a creer:
+public void createDatabase(String name)//creation de la database
+
+public void useDatabase(String name) //pour utiliser la database
+
+public boolean createTable(String tableName, String columns)//creation de la table et 
+apelle de la fonction 
+return currentDatabase.createTable(tableName, columns);
+dans la class Table
+
+private void insertDataIntoTable(Table table, Map<String, Object> rowData, String tableName) //fonction pour inserer les donnee
+
+public void executeCommand(String command) //pour ajouter les commande a executer
+
+private Object convertValue(String value, String columnType)//convertir les type de column
+
+public void saveDataToFile() //pour sauvgarder
+
+public void loadDataFromFile() //pour faire une load
+
+
+Les fonction de base du programme

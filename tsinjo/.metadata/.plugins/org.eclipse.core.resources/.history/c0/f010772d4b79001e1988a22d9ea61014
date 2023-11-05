@@ -1,0 +1,7 @@
+package relation;
+
+import java.io.Serializable;
+
+public class Database implements Serializable{
+	
+}
