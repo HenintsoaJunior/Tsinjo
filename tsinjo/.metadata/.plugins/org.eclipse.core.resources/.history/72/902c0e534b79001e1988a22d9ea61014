@@ -1,9 +1,0 @@
-package relation;
-
-import java.io.Serializable;
-import java.util.Map;
-
-public class Database implements Serializable{
-	private String name;
-	private Map<String, Table> tables;
-}

@@ -1,7 +1,0 @@
-INDEX VERSION 1.4+C:\Users\HENINTSOA\Documents\java\tsinjo\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-810533026.index
-3056475622.index
-3675655379.index
-4048815645.index
-313499201.index
-1200773260.index
