@@ -25,6 +25,127 @@ public class Relation {
 	public Relation() {
 		databases = new HashMap<String, Database>();
 	}
+	public Table cartesianProduct(Table table1, Table table2) {
+	    if (table1 == null || table2 == null) {
+	        // Vérifiez que les tables ne sont pas nulles
+	        System.out.println("Les tables ne doivent pas être nulles.");
+	        return null;
+	    }
+
+	    Table resultTable = new Table();
+
+	    // Créez le schéma de la table résultante
+	    Map<String, String> schema = new HashMap<>(table1.getColumns());
+	    schema.putAll(table2.getColumns());
+	    resultTable.setColumns(schema);
+
+	    // Effectuez le produit cartésien
+	    List<Map<String, Object>> resultData = new ArrayList<>();
+	    for (Map<String, Object> row1 : table1.getData()) {
+	        for (Map<String, Object> row2 : table2.getData()) {
+	            Map<String, Object> combinedRow = new HashMap<>(row1);
+	            combinedRow.putAll(row2);
+	            resultData.add(combinedRow);
+	        }
+	    }
+
+	    resultTable.setData(resultData);
+	    return resultTable;
+	}
+
+
+	private boolean isNaturalJoinCommand(String command) {
+	    String[] parts = command.split(" ");
+
+	    return (parts.length == 5 && parts[0].equalsIgnoreCase("natural") && parts[1].equalsIgnoreCase("JOIN")
+	            && parts[3].equalsIgnoreCase("WITH"));
+	}
+
+	private void cartesianProduct(String tableName1, String tableName2) {
+	    Table table1 = database.getTable(tableName1);
+	    Table table2 = database.getTable(tableName2);
+
+	    if (table1 != null && table2 != null) {
+	        Table resultTable = cartesianProduct(table1, table2);
+	        displayAllData(resultTable.getData());
+	    } else {
+	        System.out.println("Les tables spécifiées n'existent pas dans la base de données.");
+	    }
+	}
+
+	private void processNaturalJoin(String tableName1, String tableName2) {
+	    if (database != null && database.tableExists(tableName1) && database.tableExists(tableName2)) {
+	        List<Map<String, Object>> result = naturalJoin(tableName1, tableName2);
+
+	        if (result != null) {
+	            displayAllData(result);
+	        }
+	    } else {
+	        System.out.println("Les tables spécifiées n'existent pas dans la base de données.");
+	    }
+	}
+
+	private void traitementJointureCommand(String command) {
+	    if (isNaturalJoinCommand(command)) {
+	        String[] parts = command.split(" ");
+	        String tableName1 = parts[2];
+	        String tableName2 = parts[4];
+	        processNaturalJoin(tableName1, tableName2);
+	    } else {
+	        System.out.println("Commande de jointure non valide : " + command);
+	    }
+	}
+
+	
+	private List<String> getCommonAttributes(Table table1, Table table2) {
+	    List<String> commonAttributes = new ArrayList<>();
+	    for (String attr1 : table1.getColumns().keySet()) {
+	        if (table2.getColumns().containsKey(attr1)) {
+	            commonAttributes.add(attr1);
+	        }
+	    }
+	    return commonAttributes;
+	}
+
+	private List<Map<String, Object>> performNaturalJoin(Table table1, Table table2, List<String> commonAttributes) {
+	    List<Map<String, Object>> result = new ArrayList<>();
+	    for (Map<String, Object> row1 : table1.getData()) {
+	        for (Map<String, Object> row2 : table2.getData()) {
+	            boolean match = true;
+	            for (String attr : commonAttributes) {
+	                if (!row1.get(attr).equals(row2.get(attr))) {
+	                    match = false;
+	                    break;
+	                }
+	            }
+	            if (match) {
+	                Map<String, Object> resultRow = new HashMap<>();
+	                resultRow.putAll(row1);
+	                resultRow.putAll(row2);
+	                result.add(resultRow);
+	            }
+	        }
+	    }
+	    return result;
+	}
+
+	private List<Map<String, Object>> naturalJoin(String tableName1, String tableName2) {
+	    if (database != null && database.tableExists(tableName1) && database.tableExists(tableName2)) {
+	        Table table1 = database.getTable(tableName1);
+	        Table table2 = database.getTable(tableName2);
+	        List<String> commonAttributes = getCommonAttributes(table1, table2);
+	        if (!commonAttributes.isEmpty()) {
+	            return performNaturalJoin(table1, table2, commonAttributes);
+	        } else {
+	            System.out.println("Les tables ne partagent aucune colonne en commun.");
+	            return null;
+	        }
+	    } else {
+	        System.out.println("Une ou plusieurs tables n'existent pas dans la base de données.");
+	        return null;
+	    }
+	}
+
 	
 	public void CreateDatabase(String name) {
 		if(!databases.containsKey(name)) {
@@ -122,15 +243,15 @@ public class Relation {
 
     public void executeCommand(String command) {
         if (command.toLowerCase().startsWith("crear database ")) {
-        	traitementCreateDatabaseCommand(command);
+            traitementCreateDatabaseCommand(command);
         } else if (command.toLowerCase().startsWith("usar ")) {
-        	traitementUseDatabaseCommand(command);
+            traitementUseDatabaseCommand(command);
         } else if (command.toLowerCase().startsWith("crear table ")) {
-        	traitementCreateTableCommand(command);
+            traitementCreateTableCommand(command);
         } else if (command.toLowerCase().startsWith("spettacolo tables")) {
             ShowTables();
         } else if (command.toLowerCase().startsWith("seleccionar ")) {
-        	traitementSelectCommand(command);
+            traitementSelectCommand(command);
         } else if (command.toLowerCase().startsWith("commit")) {
             saveDataToFile();
             System.out.println("Données sauvegardées dans le fichier.");
@@ -138,11 +259,14 @@ public class Relation {
             loadDataFromFile(); 
             System.out.println("Données chargées à partir du fichier.");
         } else if (command.toLowerCase().startsWith("insertar into ")) {
-        	traitementInsertIntoCommand(command);
+            traitementInsertIntoCommand(command);
+        } else if (command.toLowerCase().startsWith("natural ")) {
+            traitementJointureCommand(command);
         } else {
             System.out.println("Commande non reconnue : " + command);
         }
     }
+
 
     private void traitementCreateDatabaseCommand(String command) {
         // Votre logique pour gérer la création de la base de données
@@ -502,6 +626,8 @@ public class Relation {
         table.insertData(rowData);
         System.out.println("Données insérées avec succès dans la table '" + tableName + "'.");
     }
+    
+    
 
     public void saveDataToFile() {
         try {
