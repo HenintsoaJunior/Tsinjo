@@ -19,8 +19,7 @@ import java.util.regex.Pattern;
 
 public class Relation {
 	private Map<String, Database> databases;
-	private Database database;
-	
+	private Database database;	
 	Table table = new Table();
 	
 	public Relation() {
@@ -235,7 +234,7 @@ public class Relation {
         }
     }
 
- private void handleSelectWithoutWhereCommand(String tableName, String columnSelection) {
+    private void handleSelectWithoutWhereCommand(String tableName, String columnSelection) {
         if (columnSelection.equals("*")) {
             List<Map<String, Object>> selectedData = selectAllFromTable(tableName);
             if (selectedData != null) {
@@ -401,29 +400,29 @@ public class Relation {
 
     
     private List<Map<String, Object>> selectFromTable(String tableName, String columnSelection) {
-    if (database != null && database.tableExists(tableName)) {
-        Table table = database.getTable(tableName);
-        List<Map<String, Object>> selectedData = new ArrayList<>();
+    	if (database != null && database.tableExists(tableName)) {
+    		Table table = database.getTable(tableName);
+    		List<Map<String, Object>> selectedData = new ArrayList<>();
 
-        // Split la sélection de colonnes par des virgules
-        String[] selectedColumns = columnSelection.split(",");
-        for (Map<String, Object> rowData : table.getData()) {
-            Map<String, Object> selectedRow = new HashMap<>();
-            for (String columnName : selectedColumns) {
-                String trimmedColumnName = columnName.trim();
-                if (table.columnExists(trimmedColumnName)) {
-                    selectedRow.put(trimmedColumnName, rowData.get(trimmedColumnName));
-                }
-            }
-            selectedData.add(selectedRow);
-        }
-        return selectedData;
-    } else {
-        System.out.println("La table '" + tableName + "' n'existe pas dans la base de données '" + database.getName() + "'.");
-        return null;
-    }
-}
-
+	        // Split la sélection de colonnes par des virgules
+	        String[] selectedColumns = columnSelection.split(",");
+	        for (Map<String, Object> rowData : table.getData()) {
+	            Map<String, Object> selectedRow = new HashMap<>();
+	            for (String columnName : selectedColumns) {
+	                String trimmedColumnName = columnName.trim();
+	                if (table.columnExists(trimmedColumnName)) {
+	                    selectedRow.put(trimmedColumnName, rowData.get(trimmedColumnName));
+	                }
+	            }
+	            selectedData.add(selectedRow);
+	        }
+	        return selectedData;
+	    } else {
+	        System.out.println("La table '" + tableName + "' n'existe pas dans la base de données '" + database.getName() + "'.");
+	        return null;
+	    }
+	}
+	
     private void handleInsertIntoCommand(String command) {
         Pattern pattern = Pattern.compile("INSERT INTO (\\w+) \\((.+)\\) VALUES \\((.+)\\)");
         Matcher matcher = pattern.matcher(command);
@@ -473,6 +472,7 @@ public class Relation {
         }
         return rowData;
     }
+    
     private Object convertValue(String value, String columnType) {
         if (columnType.equals("int")) {
             try {
@@ -547,22 +547,6 @@ public class Relation {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-    public static void main(String[] args) {
-        Relation manager = new Relation();
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-        	
-            System.out.print("GASYSQL> ");
-            String input = scanner.nextLine().trim();
-            if (input.equalsIgnoreCase("exit")) {
-                break;
-            }
-            manager.executeCommand(input);
-        }
-
-        scanner.close();
     }
     
 }

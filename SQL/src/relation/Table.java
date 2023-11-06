@@ -39,7 +39,7 @@ public class Table implements Serializable{
 		columns = new HashMap<String, String>();// Initialisation d'une nouvelle liste de donnees vide.
 		ParseColumn(columnDef);
 	}
-	//ajoute moi une type date sur ca 
+	
 	public void ParseColumn(String columnDef) {
 		String[] definitions = columnDef.split(",");
 		for(String definition : definitions) {
