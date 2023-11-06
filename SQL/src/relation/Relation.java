@@ -121,15 +121,15 @@ public class Relation {
 
 
     public void executeCommand(String command) {
-        if (command.toLowerCase().startsWith("create database ")) {
+        if (command.toLowerCase().startsWith("crear database ")) {
         	traitementCreateDatabaseCommand(command);
-        } else if (command.toLowerCase().startsWith("use ")) {
+        } else if (command.toLowerCase().startsWith("usar ")) {
         	traitementUseDatabaseCommand(command);
-        } else if (command.toLowerCase().startsWith("create table ")) {
+        } else if (command.toLowerCase().startsWith("crear table ")) {
         	traitementCreateTableCommand(command);
-        } else if (command.toLowerCase().startsWith("show tables")) {
+        } else if (command.toLowerCase().startsWith("spettacolo tables")) {
             ShowTables();
-        } else if (command.toLowerCase().startsWith("select ")) {
+        } else if (command.toLowerCase().startsWith("seleccionar ")) {
         	traitementSelectCommand(command);
         } else if (command.toLowerCase().startsWith("commit")) {
             saveDataToFile();
@@ -137,29 +137,28 @@ public class Relation {
         } else if (command.toLowerCase().startsWith("load")) {
             loadDataFromFile(); 
             System.out.println("Données chargées à partir du fichier.");
-        } else if (command.toLowerCase().startsWith("insert into ")) {
+        } else if (command.toLowerCase().startsWith("insertar into ")) {
         	traitementInsertIntoCommand(command);
         } else {
             System.out.println("Commande non reconnue : " + command);
         }
     }
 
-
     private void traitementCreateDatabaseCommand(String command) {
         // Votre logique pour gérer la création de la base de données
-        String dbName = command.substring("create database ".length());
+        String dbName = command.substring("crear database ".length());
         CreateDatabase(dbName);
     }
 
     private void traitementUseDatabaseCommand(String command) {
         // Votre logique pour gérer l'utilisation de la base de données
-        String dbName = command.substring("use ".length());
+        String dbName = command.substring("usar ".length());
         useDatabase(dbName);
     }
 
     private void traitementCreateTableCommand(String command) {
         // Votre logique pour gérer la création de la table
-        String regex = "create table ([a-zA-Z]+) \\((.+)\\)";
+        String regex = "crear table ([a-zA-Z]+) \\((.+)\\)";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(command);
 
@@ -189,7 +188,7 @@ public class Relation {
 
     
     private void traitementSelectCommand(String command) {
-        String regex = "SELECT (.+) FROM ([a-zA-Z]+)(?: WHERE (.+))?";
+        String regex = "SELECCIONAR (.+) FROM ([a-zA-Z]+)(?: WHERE (.+))?";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(command);
 
@@ -421,9 +420,9 @@ public class Relation {
 	        return null;
 	    }
 	}
-	
+    
     private void traitementInsertIntoCommand(String command) {
-        Pattern pattern = Pattern.compile("INSERT INTO (\\w+) \\((.+)\\) VALUES \\((.+)\\)");
+        Pattern pattern = Pattern.compile("INSERTAR INTO (\\w+) \\((.+)\\) VALUES \\((.+)\\)");
         Matcher matcher = pattern.matcher(command);
 
         if (matcher.matches()) {
