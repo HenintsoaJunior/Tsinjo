@@ -120,18 +120,17 @@ public class Relation {
     }
 
 
-
     public void executeCommand(String command) {
         if (command.toLowerCase().startsWith("create database ")) {
-            handleCreateDatabaseCommand(command);
+        	traitementCreateDatabaseCommand(command);
         } else if (command.toLowerCase().startsWith("use ")) {
-            handleUseDatabaseCommand(command);
+        	traitementUseDatabaseCommand(command);
         } else if (command.toLowerCase().startsWith("create table ")) {
-            handleCreateTableCommand(command);
+        	traitementCreateTableCommand(command);
         } else if (command.toLowerCase().startsWith("show tables")) {
             ShowTables();
         } else if (command.toLowerCase().startsWith("select ")) {
-            handleSelectCommand(command);
+        	traitementSelectCommand(command);
         } else if (command.toLowerCase().startsWith("commit")) {
             saveDataToFile();
             System.out.println("Données sauvegardées dans le fichier.");
@@ -139,26 +138,26 @@ public class Relation {
             loadDataFromFile(); 
             System.out.println("Données chargées à partir du fichier.");
         } else if (command.toLowerCase().startsWith("insert into ")) {
-            handleInsertIntoCommand(command);
+        	traitementInsertIntoCommand(command);
         } else {
             System.out.println("Commande non reconnue : " + command);
         }
     }
 
 
-    private void handleCreateDatabaseCommand(String command) {
+    private void traitementCreateDatabaseCommand(String command) {
         // Votre logique pour gérer la création de la base de données
         String dbName = command.substring("create database ".length());
         CreateDatabase(dbName);
     }
 
-    private void handleUseDatabaseCommand(String command) {
+    private void traitementUseDatabaseCommand(String command) {
         // Votre logique pour gérer l'utilisation de la base de données
         String dbName = command.substring("use ".length());
         useDatabase(dbName);
     }
 
-    private void handleCreateTableCommand(String command) {
+    private void traitementCreateTableCommand(String command) {
         // Votre logique pour gérer la création de la table
         String regex = "create table ([a-zA-Z]+) \\((.+)\\)";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
@@ -189,7 +188,7 @@ public class Relation {
     }
 
     
-    private void handleSelectCommand(String command) {
+    private void traitementSelectCommand(String command) {
         String regex = "SELECT (.+) FROM ([a-zA-Z]+)(?: WHERE (.+))?";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(command);
@@ -201,18 +200,18 @@ public class Relation {
 
             if (whereClause != null && !whereClause.isEmpty()) {
                 // Handle SELECT command with WHERE clause
-                handleSelectWithWhereCommand(tableName, columnSelection, whereClause);
+            	traitementSelectWithWhere(tableName, columnSelection, whereClause);
             } else {
                 // Handle SELECT command without WHERE clause
-                handleSelectWithoutWhereCommand(tableName, columnSelection);
+            	traitementSelectWithoutWhere(tableName, columnSelection);
             }
         } else {
             System.out.println("Invalid SELECT command: " + command);
         }
     }
 
-    private void handleSelectWithWhereCommand(String tableName, String columnSelection, String whereClause) {
-        List<Map<String, Object>> filteredData = filterDataWithWhere(tableName, columnSelection, whereClause);
+    private void traitementSelectWithWhere(String tableName, String columnSelection, String whereClause) {
+        List<Map<String, Object>> filteredData = filterDonneeWithWhere(tableName, columnSelection, whereClause);
 
         if (columnSelection.equals("*")) {
             displaySelectedData("*", filteredData);
@@ -233,8 +232,8 @@ public class Relation {
             displaySelectedData(columnSelection, selectedData);
         }
     }
-
-    private void handleSelectWithoutWhereCommand(String tableName, String columnSelection) {
+    //traiterCommandeSélectionSansCondition
+    private void traitementSelectWithoutWhere(String tableName, String columnSelection) {
         if (columnSelection.equals("*")) {
             List<Map<String, Object>> selectedData = selectAllFromTable(tableName);
             if (selectedData != null) {
@@ -248,7 +247,7 @@ public class Relation {
         }
     }
 
-    private List<Map<String, Object>> filterDataWithWhere(String tableName, String columnSelection, String whereClause) {
+    private List<Map<String, Object>> filterDonneeWithWhere(String tableName, String columnSelection, String whereClause) {
         try {
             // Get the table from the database
             Table table = database.getTable(tableName);
@@ -423,7 +422,7 @@ public class Relation {
 	    }
 	}
 	
-    private void handleInsertIntoCommand(String command) {
+    private void traitementInsertIntoCommand(String command) {
         Pattern pattern = Pattern.compile("INSERT INTO (\\w+) \\((.+)\\) VALUES \\((.+)\\)");
         Matcher matcher = pattern.matcher(command);
 
@@ -437,7 +436,7 @@ public class Relation {
                 String[] columnNamesArray = columnNames.split(",");
                 String[] valuesArray = values.split(",");
                 if (columnNamesArray.length == valuesArray.length) {
-                    Map<String, Object> rowData = buildRowData(columnNamesArray, valuesArray, table);
+                    Map<String, Object> rowData = construireLigneDeData(columnNamesArray, valuesArray, table);
                     if (rowData != null) {
                         insertDataIntoTable(table, rowData, tableName);
                     }
@@ -451,8 +450,8 @@ public class Relation {
             System.out.println("Commande non reconnue : " + command);
         }
     }
-
-    private Map<String, Object> buildRowData(String[] columnNamesArray, String[] valuesArray, Table table) {
+    
+    private Map<String, Object> construireLigneDeData(String[] columnNamesArray, String[] valuesArray, Table table) {
         Map<String, Object> rowData = new HashMap<>();
         for (int i = 0; i < columnNamesArray.length; i++) {
             String columnName = columnNamesArray[i].trim();
