@@ -355,7 +355,6 @@ public class Relation {
         return false;
     }
 
-    
     private boolean evaluateCombinedConditions(Map<String, Object> rowData, String conditions, String columnSelection, String logicalOperator) {
         String[] conditionsArray;
         
@@ -545,6 +544,5 @@ public class Relation {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-    
+    }    
 }

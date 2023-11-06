@@ -1,0 +1,56 @@
+************************************MANAHAONA TOMPOKO***************************************
+
+
+************************************MAMORONA DATABASE***************************************
+
+crear database anarana
+
+Ohatra : crear database Olona
+
+
+************************************MAMPIASA DATABASE***************************************
+usar anarana
+
+Ohatra : usar Olona
+
+
+***********************************MAMORONA RELATION****************************************
+
+crear table Olona (anarasa isa,anarana soratra)
+
+Ohatra : crear table Olona (id isa,nom soratra)
+
+
+**********************************MAMPIDITRA RELATION***************************************
+
+insertar into anarana (anarana,anarana) VALUES (valera1,valera2)
+
+Ohatra : insertar into Olona (id,nom) VALUES (1,"Henintsoa")
+
+
+**********************************MAPISEHO RELATION****************************************
+
+seleccionar * FROM anarana
+
+Ohatra : seleccionar * FROM Olona
+
+
+**************************************TEHIRIZO*********************************************
+
+TEHIRIZO : commit
+
+
+***************************************miala***********************************************
+
+exit RAHA TIA Iala enao
+
+
+**************************************fanampiana*******************************************
+
+
+Raha mila fanampiana enao
+
+
+***************************************LOAD************************************************
+RAHA I LOAD Ireo Donnee anaty fichier enao
+
