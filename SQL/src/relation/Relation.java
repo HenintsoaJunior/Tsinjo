@@ -53,14 +53,6 @@ public class Relation {
 	    return resultTable;
 	}
 
-
-	private boolean isNaturalJoinCommand(String command) {
-	    String[] parts = command.split(" ");
-
-	    return (parts.length == 5 && parts[0].equalsIgnoreCase("natural") && parts[1].equalsIgnoreCase("JOIN")
-	            && parts[3].equalsIgnoreCase("WITH"));
-	}
-
 	private void cartesianProduct(String tableName1, String tableName2) {
 	    Table table1 = database.getTable(tableName1);
 	    Table table2 = database.getTable(tableName2);
@@ -73,6 +65,20 @@ public class Relation {
 	    }
 	}
 
+	private boolean isCartesianJoinCommand(String command) {
+	    String[] parts = command.split(" ");
+
+	    return (parts.length == 5 && parts[0].equalsIgnoreCase("cartesian") && parts[1].equalsIgnoreCase("JOIN")
+	            && parts[3].equalsIgnoreCase("WITH"));
+	}
+	
+	private boolean isNaturalJoinCommand(String command) {
+	    String[] parts = command.split(" ");
+
+	    return (parts.length == 5 && parts[0].equalsIgnoreCase("natural") && parts[1].equalsIgnoreCase("JOIN")
+	            && parts[3].equalsIgnoreCase("WITH"));
+	}
+	
 	private void processNaturalJoin(String tableName1, String tableName2) {
 	    if (database != null && database.tableExists(tableName1) && database.tableExists(tableName2)) {
 	        List<Map<String, Object>> result = naturalJoin(tableName1, tableName2);
@@ -91,6 +97,11 @@ public class Relation {
 	        String tableName1 = parts[2];
 	        String tableName2 = parts[4];
 	        processNaturalJoin(tableName1, tableName2);
+	    }else if (isCartesianJoinCommand(command)) {
+	        String[] parts = command.split(" ");
+	        String tableName1 = parts[2];
+	        String tableName2 = parts[4];
+	        cartesianProduct(tableName1, tableName2);
 	    } else {
 	        System.out.println("Commande de jointure non valide : " + command);
 	    }
@@ -261,6 +272,8 @@ public class Relation {
         } else if (command.toLowerCase().startsWith("insertar into ")) {
             traitementInsertIntoCommand(command);
         } else if (command.toLowerCase().startsWith("natural ")) {
+            traitementJointureCommand(command);
+        } else if (command.toLowerCase().startsWith("cartesian ")) {
             traitementJointureCommand(command);
         } else {
             System.out.println("Commande non reconnue : " + command);

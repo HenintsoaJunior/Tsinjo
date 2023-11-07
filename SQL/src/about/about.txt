@@ -54,3 +54,6 @@ Raha mila fanampiana enao
 ***************************************LOAD************************************************
 RAHA I LOAD Ireo Donnee anaty fichier enao
 
+
+****************************************join***********************************************
+natural JOIN Personne WITH Andrana 
