@@ -43,10 +43,10 @@ public class Table implements Serializable {
         for (String definition : definitions) {
             String[] decoupage = definition.trim().split(" ");
             if (decoupage.length == 2) { // vérification de deux parties distinctes
-                String columnName = decoupage[0];
-                String columnType = decoupage[1];
+                String columnName = decoupage[0].trim();
+                String columnType = decoupage[1].trim();
 
-                if (columnType.equals("int") || columnType.equals("String") || columnType.equals("date")) {
+                if ( columnType.equals("int") || columnType.equals("String") || columnType.equals("date") ) {
                     columns.put(columnName, columnType);
                 } else {
                     System.out.println("Type de colonne non valide");

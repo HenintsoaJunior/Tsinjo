@@ -1,25 +1,16 @@
 package relation;
 
-import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import file.File;
 
 public class Relation {
 	private Map<String, Database> databases;
@@ -44,10 +35,10 @@ public class Relation {
         } else if (command.toLowerCase().startsWith("seleccionar ")) {
             traitementSelectCommand(command);
         } else if (command.toLowerCase().startsWith("commit")) {
-            saveDataToFile();
+            File.saveDataToFile(databases,database);
             System.out.println("Données sauvegardées dans le fichier.");
         } else if (command.toLowerCase().startsWith("load")) {
-            loadDataFromFile(); 
+            File.loadDataFromFile(databases,database); 
             System.out.println("Données chargées à partir du fichier.");
         } else if (command.toLowerCase().startsWith("insertar into ")) {
             traitementInsertIntoCommand(command);
@@ -111,7 +102,6 @@ public class Relation {
         displayAllData(result);
         return result;
     }
-
     
     private List<Map<String, Object>> thetaJoin(String tableName1, String tableName2, String conditionColumn) {
         if (database != null && database.tableExists(tableName1) && database.tableExists(tableName2)) {
@@ -124,7 +114,6 @@ public class Relation {
         }
     }
 
-    
 	public Table cartesianProduct(Table table1, Table table2) {
 	    if (table1 == null || table2 == null) {
 	        // Vérifiez que les tables ne sont pas nulles
@@ -152,7 +141,6 @@ public class Relation {
 	    resultTable.setData(resultData);
 	    return resultTable;
 	}
-
 	
 	private void cartesianProduct(String tableName1, String tableName2) {
 	    Table table1 = database.getTable(tableName1);
@@ -610,7 +598,6 @@ public class Relation {
             return null;
         }
     }
-    
 
 /******************************************INSERT**************************************************************/
     private void traitementInsertIntoCommand(String command) {
@@ -694,49 +681,4 @@ public class Relation {
         table.insertData(rowData);
         System.out.println("Données insérées avec succès dans la table '" + tableName + "'.");
     }
-  
-/*********************************************************SAVET ET LOAD*********************************************************/
-    public void saveDataToFile() {
-        try {
-            // Créez un flux de sortie pour écrire dans le fichier
-            FileOutputStream fileOutputStream = new FileOutputStream("C:\\Users\\Henintsoa\\Documents\\github\\Tsinjo\\SQLGASY\\src\\fichier\\file.txt");
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-
-            // Écrivez les données de la classe DatabaseManager dans le fichier
-            objectOutputStream.writeObject(databases);
-            objectOutputStream.writeObject(database);
-
-            // Fermez les flux
-            objectOutputStream.close();
-            fileOutputStream.close();
-
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public void loadDataFromFile() {
-        try {
-            // Créez un flux d'entrée pour lire à partir du fichier
-            FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Henintsoa\\Documents\\github\\Tsinjo\\SQLGASY\\src\\fichier\\file.txt");
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-
-            // Lisez les données de la classe DatabaseManager à partir du fichier
-            databases = (Map<String, Database>) objectInputStream.readObject();
-            database = (Database) objectInputStream.readObject();
-
-            // Fermez les flux
-            objectInputStream.close();
-            fileInputStream.close();
-
-      
-        } catch (EOFException e) {
-            System.err.println("Le fichier est vide. Aucune donnée n'a été chargée.");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }    
-
-}
+  }
